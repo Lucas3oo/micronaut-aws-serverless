@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  awslambda:
+    command: >
+       io.micronaut.function.aws.proxy.MicronautLambdaHandler
+    environment:
+      DOCKER_LAMBDA_STAY_OPEN: 1
+    image: mlupin/docker-lambda:java11
+    ports:
+      - 9001:9001
+    volumes:
+      - ${stageLocalLambdaFolderName}:/var/task:ro,delegated
+
+
+

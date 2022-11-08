@@ -1,0 +1,16 @@
+plugins {
+  id 'groovy-gradle-plugin'
+}
+
+repositories {
+  mavenCentral()
+  gradlePluginPortal()
+}
+
+dependencies {
+  // versions for the plugins are controlled here
+  // <plugin id>:<plugin id>.gradle.plugin:<version>.
+  implementation 'com.avast.gradle.docker-compose:com.avast.gradle.docker-compose.gradle.plugin:0.14.11'
+  implementation 'se.solrike.cloudformation:se.solrike.cloudformation.gradle.plugin:1.0.0-beta.2'
+  implementation 'seek.aws:seek.aws.gradle.plugin:0.0.35'
+}

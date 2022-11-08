@@ -1,0 +1,117 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: This template defines AWS API Gateway for REST API to the Java based lambda over a proxy
+  using the AWS SAM framework.
+Parameters:
+  Prefix:
+    Description: Provide a string that will be used as prefix for names and tags.
+    Type: String
+    Default: slrk
+    AllowedPattern: '.+'
+  Environment:
+    Description: Provide the environment name. Value will be used in the Name and Environment tags. E.g. stg-qa.
+    Type: String
+    AllowedPattern: '.+'
+  Owner:
+    Description: Owner name, the team or person that is responsible for the deployment. Value will be used for Owner tag
+    Type: String
+    Default: slrk
+    AllowedPattern: '.+'
+  CodeFileName:
+    Description: The filename of the JAR/ZIP that has the lambda. The key in S3 bucket.
+      E.g. my-api-1.0.jar
+    Type: String
+  CodeS3BucketName:
+    Description: The S3 bucket name for where the lambda is located.
+      E.g. slrk-lambda-repo
+    Type: String
+  FunctionName:
+    Description: Friendly name of the lambda. E.g. my-api.
+      The name will be prepended with the prefix and the enviroment name.
+    Type: String
+  Handler:
+    Description: The function's handler. E.g. se.solrike.cloud.serverless.StreamLambdaHandler::handleRequest
+    Type: String
+  MemorySize:
+    Description: The size of the memory in MB allocated per invocation of the function.
+    Type: Number
+    Default: 1024
+
+
+
+Metadata:
+  TemplateAuthor: 'Lucas Persson'
+  Version: 1.0
+
+# Put common properties for all 'resources' here.
+Globals:
+  Api:
+    # API Gateway regional endpoints
+    EndpointConfiguration: REGIONAL
+
+
+Resources:
+
+# ServerlessRestApi is an implicit "AWS::Serverless::Api" resource created out of Events key
+# under Serverless::Function.
+# Find out more about other implicit resources you can reference within SAM
+# https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+
+  ServerlessFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - arm64
+      CodeUri:
+        Bucket: !Ref CodeS3BucketName
+        Key: !Ref CodeFileName
+      Environment:
+        Variables:
+          # speed up start of the Java process
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        # Type: Api means REST API, HttpApi means HTTP API which has built in support of OpenID Connect and CORS
+        ApiGetAllEvent:
+          Type: Api
+          Properties:
+            Method: get
+            Path: /api/v1/books
+        ApiGetOneEvent:
+          Type: Api
+          Properties:
+            Method: get
+            Path: /api/v1/books/{id}
+            RequestParameters:
+              - method.request.path.id
+        ApiPostEvent:
+          Type: Api
+          Properties:
+            Method: post
+            Path: /api/v1/books
+      FunctionName: !Sub '${Prefix}-${Environment}-${FunctionName}'
+      Handler: !Ref Handler
+      MemorySize: !Ref MemorySize
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Runtime: java11
+      Tags:
+        Environment: !Ref Environment
+        Owner: !Ref Owner
+      Timeout: 20 # seconds
+
+
+
+Outputs:
+  ServerlessFunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt ServerlessFunction.Arn
+  ServerlessFunctionEndpointUrl:
+    Description: API Gateway endpoint URL for a stage called 'Prod'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
+  ServerlessFunctionIamRoleArn:
+    Description: Implicit IAM Role created for ServerlessFunction function
+    Value: !GetAtt ServerlessFunctionRole.Arn
+  LogGroupName:
+    Description: Log group name for the lambda
+    Value: !Sub '/aws/lambda/${Prefix}-${Environment}-${FunctionName}'
+

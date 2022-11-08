@@ -1,0 +1,7 @@
+{
+  "path": "/api/v1/books",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "application/json"
+  }
+}

@@ -1,0 +1,29 @@
+plugins {
+  id 'eclipse'
+}
+
+
+//
+//java {
+//  sourceCompatibility = JavaVersion.VERSION_11
+//  targetCompatibility = JavaVersion.VERSION_11
+//}
+
+
+eclipse {
+  classpath {
+    defaultOutputDir = file('bin.nosync/main')
+    file {
+      whenMerged {
+        def src = entries.find { it.path == 'src/main/java' }
+        if (src) src.output = 'bin.nosync/main'
+        src = entries.find { it.path == 'src/main/resources' }
+        if (src) src.output = 'bin.nosync/main'
+        src = entries.find { it.path == 'src/test/java' }
+        if (src) src.output = 'bin.nosync/test'
+        src = entries.find { it.path == 'src/test/resources' }
+        if (src) src.output = 'bin.nosync/test'
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+plugins {
+  id 'io.micronaut.application' version '3.6.3'
+
+  // https://github.com/spring-gradle-plugins/dependency-management-plugin/blob/master/README.md
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply true
+  id 'se.solrike.base'
+  id 'se.solrike.deploy' apply false // must apply after version property is set
+  id 'se.solrike.local-aws-lambda'
+  id 'se.solrike.conventions.java-conventions' version '1.0.0-beta.2'
+}
+
+version = '0.1'
+group = 'se.solrike.demo'
+
+// need to apply the plugin after version is set since that is used in the plugin (implicitly)
+apply plugin: 'se.solrike.deploy'
+
+repositories {
+  mavenCentral()
+}
+
+
+// ********* keep in alphabetic order !!!! ************
+dependencyManagement {
+  dependencies {
+    imports {
+      mavenBom 'io.micronaut:micronaut-bom:3.7.3'
+    }
+    dependency 'io.symphonia:lambda-logging:1.0.3'
+    def mapStructVersion = '1.4.1.Final'
+    dependency "org.mapstruct:mapstruct:$mapStructVersion"
+    dependency "org.mapstruct:mapstruct-processor:$mapStructVersion"
+
+
+    // test dependeces
+    dependency 'org.assertj:assertj-core:3.23.1'
+    imports {
+      mavenBom 'org.junit:junit-bom:5.7.0'
+    }
+  }
+}
+
+
+dependencies {
+  annotationProcessor('io.micronaut.data:micronaut-data-processor')
+  annotationProcessor('io.micronaut:micronaut-http-validation')
+  implementation('io.micronaut.aws:micronaut-aws-sdk-v2')
+  implementation('io.micronaut.data:micronaut-data-hibernate-jpa')
+  implementation('io.micronaut.sql:micronaut-jdbc-hikari')
+  implementation('io.micronaut:micronaut-http-client')
+  implementation('io.micronaut:micronaut-jackson-databind')
+  implementation('io.micronaut:micronaut-validation')
+  implementation('jakarta.annotation:jakarta.annotation-api')
+  runtimeOnly('ch.qos.logback:logback-classic')
+  runtimeOnly('com.h2database:h2')
+  testImplementation('io.micronaut:micronaut-http-client')
+  testImplementation('org.assertj:assertj-core')
+
+
+
+}
+
+def applicationClass = 'se.solrike.demo.Application'
+
+application {
+  mainClass.set(applicationClass)
+}
+
+// package all dependecies inside the JAR as separate JARs. Much cleaner compared to a fat/shadow JAR.
+jar {
+  into('lib') {
+    from configurations.runtimeClasspath
+  }
+  manifest {
+    def classpath = configurations.runtimeClasspath.copyRecursive().resolve().collect { file ->
+      "lib/${file.name}"
+    }.sort().join(' ')
+    attributes 'Main-Class': applicationClass
+    attributes 'Class-Path': classpath
+  }
+}
+
+
+
+
+//ext.micronautVersion=3.7.3
+
+
+micronaut {
+  runtime("lambda_java")
+  testRuntime("junit5")
+  processing {
+    incremental(true)
+    annotations("se.solrike.demo.*")
+  }
+}
+
+
+wrapper {
+  gradleVersion = '7.5'
+}
+

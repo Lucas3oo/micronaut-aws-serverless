@@ -1,0 +1,6 @@
+pluginManagement {
+  includeBuild '../solrike-conventions-gradle-plugin'
+}
+
+rootProject.name='micronaut-aws-serverless'
+

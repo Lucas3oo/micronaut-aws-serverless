@@ -1,0 +1,31 @@
+plugins {
+  // https://github.com/avast/gradle-docker-compose-plugin
+  id 'com.avast.gradle.docker-compose'
+}
+
+// Lambda local stage folder when running the lambda locally in a env mimicing AWS
+def stageLocalLambdaFolderName = "$buildDir/awslambda"
+file(stageLocalLambdaFolderName).mkdirs()
+
+task stageLocalLambdaFolder(type: Copy) {
+  destinationDir = file(stageLocalLambdaFolderName)
+  from compileJava
+  from processResources
+  into('lib') {
+    from configurations.runtimeClasspath
+  }
+}
+
+// run like ./gradlew awslambdaComposeUp
+// curl --data "@test-events/get-books-apigateway-aws-proxy-event.json" http://localhost:9001/2015-03-31/functions/myfunction/invocations
+dockerCompose {
+  awslambda {
+    waitForTcpPorts = true
+    captureContainersOutput = false // "debug" log off
+    environment.put 'stageLocalLambdaFolderName', stageLocalLambdaFolderName
+    useComposeFiles = [
+      "$projectDir/buildSrc/src/main/resources/docker-compose-local-aws-lambda.yaml"
+    ]
+  }
+  awslambdaComposeUp.dependsOn(stageLocalLambdaFolder)
+}
