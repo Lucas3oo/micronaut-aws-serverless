@@ -98,7 +98,7 @@ public class BookControllerTest {
   void getAllBooks() throws Exception {
     AwsProxyResponse response = handleRequest("GET", "/api/v1/books");
     assertThat(response.getStatusCode()).isEqualTo(200);
-    // then at least one book shall be the pre-loaded book
+    // then at least two of the books shall be the pre-loaded books
     assertThat(response.getBody()).contains(PRE_LOADED_BOOK_1, PRE_LOADED_BOOK_2);
   }
 

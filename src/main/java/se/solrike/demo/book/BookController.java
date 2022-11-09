@@ -26,7 +26,10 @@ public class BookController {
 
   @Post()
   public Integer add(@Body @Valid BookDto book) {
-    return mRepository.save(mMapper.convertToEntity(book)).getId();
+    BookEntity entity = mMapper.convertToEntity(book);
+    // set id to null to ensure that it will be a new book we are adding.
+    entity.setId(null);
+    return mRepository.save(entity).getId();
   }
 
   // Using the syntax {?bookFilters*} we can assign request parameters
