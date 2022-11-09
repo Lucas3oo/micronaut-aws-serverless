@@ -1,12 +1,11 @@
 plugins {
+  // https://github.com/micronaut-projects/micronaut-gradle-plugin
   id 'io.micronaut.application' version '3.6.3'
-
   // https://github.com/spring-gradle-plugins/dependency-management-plugin/blob/master/README.md
   id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply true
-  id 'se.solrike.base'
+  id 'se.solrike.conventions.java-conventions' version '1.0.0-beta.2'
   id 'se.solrike.deploy' apply false // must apply after version property is set
   id 'se.solrike.local-aws-lambda'
-  id 'se.solrike.conventions.java-conventions' version '1.0.0-beta.2'
 }
 
 version = '0.1'
@@ -19,18 +18,17 @@ repositories {
   mavenCentral()
 }
 
-
-// ********* keep in alphabetic order !!!! ************
+// versions
+def mapStructVersion = '1.4.1.Final'
+def micronautVersion = '3.7.3'
 dependencyManagement {
   dependencies {
     imports {
-      mavenBom 'io.micronaut:micronaut-bom:3.7.3'
+      mavenBom "io.micronaut:micronaut-bom:$micronautVersion"
     }
     dependency 'io.symphonia:lambda-logging:1.0.3'
-    def mapStructVersion = '1.4.1.Final'
     dependency "org.mapstruct:mapstruct:$mapStructVersion"
     dependency "org.mapstruct:mapstruct-processor:$mapStructVersion"
-
 
     // test dependeces
     dependency 'org.assertj:assertj-core:3.23.1'
@@ -55,16 +53,18 @@ dependencies {
   runtimeOnly('com.h2database:h2')
   testImplementation('io.micronaut:micronaut-http-client')
   testImplementation('org.assertj:assertj-core')
-
-
-
 }
 
-def applicationClass = 'se.solrike.demo.Application'
 
+
+
+
+
+def applicationClass = 'se.solrike.demo.Application'
 application {
   mainClass.set(applicationClass)
 }
+
 
 // package all dependecies inside the JAR as separate JARs. Much cleaner compared to a fat/shadow JAR.
 jar {
@@ -80,13 +80,8 @@ jar {
   }
 }
 
-
-
-
-//ext.micronautVersion=3.7.3
-
-
 micronaut {
+  version(micronautVersion)
   runtime("lambda_java")
   testRuntime("junit5")
   processing {
@@ -94,7 +89,6 @@ micronaut {
     annotations("se.solrike.demo.*")
   }
 }
-
 
 wrapper {
   gradleVersion = '7.5'

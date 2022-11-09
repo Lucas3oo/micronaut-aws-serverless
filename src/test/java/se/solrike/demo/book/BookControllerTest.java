@@ -43,7 +43,7 @@ public class BookControllerTest {
   @BeforeEach
   public void setUp() {
     sLogger.info("Loading test data");
-    mRepository.save(new Book("Lord of the rings"));
+    mRepository.save(new BookEntity("Lord of the rings"));
   }
 
   @Test

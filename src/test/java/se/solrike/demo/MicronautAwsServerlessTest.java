@@ -11,11 +11,11 @@ import jakarta.inject.Inject;
 class MicronautAwsServerlessTest {
 
   @Inject
-  EmbeddedApplication<?> application;
+  EmbeddedApplication<?> mApplication;
 
   @Test
   void testItWorks() {
-    Assertions.assertTrue(application.isRunning());
+    Assertions.assertTrue(mApplication.isRunning());
   }
 
 }

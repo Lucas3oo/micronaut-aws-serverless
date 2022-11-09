@@ -19,17 +19,17 @@ public class BookController {
   private BookRepository mRepository;
 
   @Post()
-  public Book add(@Body @Valid Book book) {
+  public BookEntity add(@Body @Valid BookEntity book) {
     return mRepository.save(book);
   }
 
   @Get()
-  public Iterable<Book> findAll() {
+  public Iterable<BookEntity> findAll() {
     return mRepository.findAll();
   }
 
   @Get("/{id}")
-  public Optional<Book> getById(Integer id) {
+  public Optional<BookEntity> getById(Integer id) {
     return mRepository.findById(id);
   }
 
