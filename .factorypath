@@ -1,4 +1,5 @@
 <factorypath>
+    <factorypathentry kind="VARJAR" id="GRADLE_USER_HOME/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.4.1.Final/a177f0daf39b807f19906fc3a7c6af8985bd8c4a/mapstruct-processor-1.4.1.Final.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="GRADLE_USER_HOME/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-processor/3.8.1/12b0abb9dcdd53dafbbb52a9358f23bb6f86268a/micronaut-data-processor-3.8.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="GRADLE_USER_HOME/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-model/3.8.1/ff170eaab3c2e0bb0a8674fdad2d5e1f1192ac43/micronaut-data-model-3.8.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="GRADLE_USER_HOME/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-tx/3.8.1/996df5fc4140dddd4a56f91df71e83e475089f84/micronaut-data-tx-3.8.1.jar" enabled="true" runInBatchMode="false"/>

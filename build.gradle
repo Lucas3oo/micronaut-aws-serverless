@@ -3,7 +3,8 @@ plugins {
   id 'io.micronaut.application' version '3.6.3'
   // https://github.com/spring-gradle-plugins/dependency-management-plugin/blob/master/README.md
   id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply true
-  id 'se.solrike.conventions.java-conventions' version '1.0.0-beta.2'
+  id 'se.solrike.base'
+  //id 'se.solrike.conventions.java-conventions' version '1.0.0-beta.2'
   id 'se.solrike.deploy' apply false // must apply after version property is set
   id 'se.solrike.local-aws-lambda'
 }
@@ -14,9 +15,6 @@ group = 'se.solrike.demo'
 // need to apply the plugin after version is set since that is used in the plugin (implicitly)
 apply plugin: 'se.solrike.deploy'
 
-repositories {
-  mavenCentral()
-}
 
 // versions
 def mapStructVersion = '1.4.1.Final'
@@ -27,8 +25,10 @@ dependencyManagement {
       mavenBom "io.micronaut:micronaut-bom:$micronautVersion"
     }
     dependency 'io.symphonia:lambda-logging:1.0.3'
+    dependency 'javax.inject:javax.inject:1'
     dependency "org.mapstruct:mapstruct:$mapStructVersion"
     dependency "org.mapstruct:mapstruct-processor:$mapStructVersion"
+
 
     // test dependeces
     dependency 'org.assertj:assertj-core:3.23.1'
@@ -42,6 +42,7 @@ dependencyManagement {
 dependencies {
   annotationProcessor('io.micronaut.data:micronaut-data-processor')
   annotationProcessor('io.micronaut:micronaut-http-validation')
+  annotationProcessor('org.mapstruct:mapstruct-processor')
   implementation('io.micronaut.aws:micronaut-aws-sdk-v2')
   implementation('io.micronaut.data:micronaut-data-hibernate-jpa')
   implementation('io.micronaut.sql:micronaut-jdbc-hikari')
@@ -49,6 +50,8 @@ dependencies {
   implementation('io.micronaut:micronaut-jackson-databind')
   implementation('io.micronaut:micronaut-validation')
   implementation('jakarta.annotation:jakarta.annotation-api')
+  implementation 'javax.inject:javax.inject'
+  implementation('org.mapstruct:mapstruct')
   runtimeOnly('ch.qos.logback:logback-classic')
   runtimeOnly('com.h2database:h2')
   testImplementation('io.micronaut:micronaut-http-client')
@@ -67,6 +70,7 @@ application {
 
 
 // package all dependecies inside the JAR as separate JARs. Much cleaner compared to a fat/shadow JAR.
+// And shadow jar is suppose to be used when you actually need to shadow a third party lib with your own version.
 jar {
   into('lib') {
     from configurations.runtimeClasspath

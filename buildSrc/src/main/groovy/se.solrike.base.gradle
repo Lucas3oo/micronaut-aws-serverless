@@ -1,0 +1,71 @@
+plugins {
+  // built in plugins
+  id 'eclipse'
+  id 'java'
+}
+
+/////// General /////////
+repositories {
+  mavenCentral()
+}
+
+/////// PLUGINS /////////
+
+
+// folder names that ends with 'nosync' will not be synced to iCloud drive.
+eclipse {
+  classpath {
+    defaultOutputDir = file('bin.nosync/main')
+    file {
+      whenMerged {
+        def src = entries.find { it.path == 'src/main/java' }
+        if (src) src.output = 'bin.nosync/main'
+        src = entries.find { it.path == 'src/main/resources' }
+        if (src) src.output = 'bin.nosync/main'
+        src = entries.find { it.path == '.apt_generated' }
+        if (src) src.output = 'bin.nosync/main'
+        src = entries.find { it.path == 'src/test/java' }
+        if (src) src.output = 'bin.nosync/test'
+        src = entries.find { it.path == 'src/test/resources' }
+        if (src) src.output = 'bin.nosync/test'
+        src = entries.find { it.path == '.apt_generated_tests' }
+        if (src) src.output = 'bin.nosync/test'
+      }
+    }
+  }
+}
+
+
+// Java plugin - start
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+  // needed for jackson deserialization using class' constructor without need for additional jackson annotations.
+  options.compilerArgs << '-parameters'
+  // Enable deprecation messages when compiling Java code
+  options.compilerArgs << '-Xlint:deprecation'
+}
+javadoc {
+  failOnError = false
+}
+test {
+  jvmArgs = [
+    '-XX:+TieredCompilation',
+    '-XX:TieredStopAtLevel=1',
+    '-Djava.security.egd=file:/dev/urandom',
+    '-XX:ReservedCodeCacheSize=120m',
+    '-Dspring.main.lazy-initialization=true'
+  ]
+  // Use Junit 5 platform for unit tests
+  useJUnitPlatform()
+  testLogging {
+    events "skipped", "failed", "standard_error"
+  }
+}
+// Java plugin - end
+
+
+

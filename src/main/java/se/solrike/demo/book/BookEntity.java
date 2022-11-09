@@ -5,15 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import io.micronaut.core.annotation.Introspected;
 
-/**
- *
- */
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "description" }))
 @Introspected
 public class BookEntity {
 
