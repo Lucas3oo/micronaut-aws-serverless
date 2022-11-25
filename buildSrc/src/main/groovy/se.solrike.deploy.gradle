@@ -3,8 +3,6 @@ plugins {
   id 'seek.aws' apply false
 }
 
-
-
 def lambdaRepoS3Bucket = 'slrk-lambda-repo'
 task uploadJarToS3(type: seek.aws.s3.UploadFile, dependsOn: jar) {
   group = 'AWS'
@@ -12,9 +10,10 @@ task uploadJarToS3(type: seek.aws.s3.UploadFile, dependsOn: jar) {
   bucket lambdaRepoS3Bucket
   file jar.archivePath
   key jar.archiveFileName.get()
+  failIfObjectExists false
 }
 
-task deploySamStack(type: se.solrike.cloudformation.CreateOrUpdateStackTask, dependsOn: jar) {
+task deploySamStack(type: se.solrike.cloudformation.CreateOrUpdateStackTask, dependsOn: uploadJarToS3) {
   group = 'AWS'
   description = 'Deployment of the API gateway and the lambda using a SAM Cloudformation template'
   Properties p = new Properties()

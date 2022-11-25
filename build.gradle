@@ -4,7 +4,6 @@ plugins {
   // https://github.com/spring-gradle-plugins/dependency-management-plugin/blob/master/README.md
   id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply true
   id 'se.solrike.base'
-  //id 'se.solrike.conventions.java-conventions' version '1.0.0-beta.2'
   id 'se.solrike.deploy' apply false // must apply after version property is set
   id 'se.solrike.local-aws-lambda'
 }
@@ -60,9 +59,6 @@ dependencies {
 
 
 
-
-
-
 def applicationClass = 'se.solrike.demo.Application'
 application {
   mainClass.set(applicationClass)
@@ -97,4 +93,6 @@ micronaut {
 wrapper {
   gradleVersion = '7.5'
 }
+
+
 

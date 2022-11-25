@@ -102,6 +102,9 @@ Resources:
 
 
 Outputs:
+  LogGroupName:
+    Description: Log group name for the lambda
+    Value: !Sub '/aws/lambda/${Prefix}-${Environment}-${FunctionName}'
   ServerlessFunctionArn:
     Description: Lambda Function ARN
     Value: !GetAtt ServerlessFunction.Arn
@@ -111,7 +114,4 @@ Outputs:
   ServerlessFunctionIamRoleArn:
     Description: Implicit IAM Role created for ServerlessFunction function
     Value: !GetAtt ServerlessFunctionRole.Arn
-  LogGroupName:
-    Description: Log group name for the lambda
-    Value: !Sub '/aws/lambda/${Prefix}-${Environment}-${FunctionName}'
 

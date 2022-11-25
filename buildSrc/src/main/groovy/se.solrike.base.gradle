@@ -2,6 +2,7 @@ plugins {
   // built in plugins
   id 'eclipse'
   id 'java'
+  id 'se.solrike.sonarlint'
 }
 
 /////// General /////////
@@ -68,4 +69,55 @@ test {
 // Java plugin - end
 
 
-
+// SonarLint
+sonarlint {
+  // rules are described here: https://rules.sonarsource.com/java/
+  excludeRules = [
+    // Methods should not have too many parameters
+    'java:S107',
+    // Inheritance tree of classes should not be too deep
+    'java:S110',
+    // Generic exceptions should never be thrown
+    'java:S112',
+    // Deprecated elements should have both the annotation and the Javadoc tag
+    'java:S1123',
+    // Deprecated code should be removed, deprecated classes is warned by Java already
+    'java:S1133',
+    // for now disabable TODO warnings
+    'java:S1135',
+    // Strings should not be concatenated using '+' in a loop
+    'java:S1643',
+    // do not require the JUnit test methods to have default visability
+    'java:S5786',
+    // mostly it is Entity classes that gets this warning and the base class equals is safe since it will type check.
+    'java:S2160',
+    // same as spotbugs USBR_UNNECESSARY_STORE_BEFORE_RETURN. Can be easier to debug with this.
+    'java:S1488'
+  ]
+  includeRules = [
+    // Members of Spring components should be injected
+    'java:S3749',
+    // Spring "@Controller" classes should not use "@Scope"
+    'java:S3750',
+    // incude Spring specific rule, component is not reachable by @ComponentsScan
+    'java:S4605',
+    // Spring components should use constructor injection
+    'java:S4288'
+  ]
+  dependencies {
+    //sonarlintPlugins 'com.sonarsource.secrets:sonar-secrets-plugin:1.1.0.36766'
+    sonarlintPlugins 'org.sonarsource.java:sonar-java-plugin:7.15.0.30507'
+    sonarlintPlugins 'org.sonarsource.xml:sonar-xml-plugin:2.6.1.3686'
+  }
+  showIssues = false
+}
+sonarlintMain {
+  reports {
+    html.enabled = true
+  }
+}
+sonarlintTest {
+  reports {
+    html.enabled = true
+  }
+}

@@ -4,7 +4,7 @@
 
   <logger name="se.solrike" level="DEBUG" />
   <logger name="io.micronaut" level="INFO" />
-  <logger name="io.micronaut.function" level="DEBUG" />
+  <logger name="io.micronaut.function" level="INFO" />
 
 
 
