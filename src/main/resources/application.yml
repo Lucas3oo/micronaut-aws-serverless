@@ -4,12 +4,49 @@ micronaut:
 
 datasources:
   default:
+    url: jdbc:mysql://database-1.cro6zlfm2yig.eu-north-1.rds.amazonaws.com:3306/database1
+    username: admin
+    password: 
+    driverClassName: com.mysql.cj.jdbc.Driver
+    schema-generate: CREATE
+    dialect: org.hibernate.dialect.MySQL8Dialect
+    pool-name: hikari-read-write
+    maximum-pool-size: 10
+    read-only: false
+    data-source-properties:
+      cachePrepStmts: true
+      prepStmtCacheSize: 250
+      prepStmtCacheSqlLimit: 2048
+      useServerPrepStmts: true
+      x-ray: true
+  h2:
     url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: ''
     driverClassName: org.h2.Driver
     schema-generate: CREATE_DROP
     dialect: H2
+    pool-name: hikari-read-write
+    maximum-pool-size: 10
+    read-only: false
+    data-source-properties:
+      cachePrepStmts: true
+      prepStmtCacheSize: 250
+      prepStmtCacheSqlLimit: 2048
+      useServerPrepStmts: true
+      x-ray: true
+    
+    
+#  read-only:
+#    url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password: ''
+#    driverClassName: org.h2.Driver
+#    schema-generate: CREATE_DROP
+#    dialect: H2
+#    pool-name: hikari-read-only
+#    maximum-pool-size: 10
+
 
 jpa:
   default:
@@ -20,4 +57,4 @@ jpa:
         hbm2ddl:
           auto: update
         show_sql: false
-        format_sql: true   
+        format_sql: true

@@ -6,6 +6,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -18,6 +21,8 @@ import io.micronaut.validation.Validated;
 @Controller("/api/v1/books")
 public class BookController {
 
+  private static final Logger sLogger = LoggerFactory.getLogger(BookController.class);
+
   @Inject
   private BookRepository mRepository;
 
@@ -26,6 +31,9 @@ public class BookController {
 
   @Post()
   public Integer add(@Body @Valid BookDto book) {
+
+    sLogger.debug("in add method");
+
     BookEntity entity = mMapper.convertToEntity(book);
     // set id to null to ensure that it will be a new book we are adding.
     entity.setId(null);

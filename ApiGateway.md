@@ -17,6 +17,9 @@ Namely mapping between the API Gateway HTTP requests and the backing lambda. The
 
 For the actually Java implementation there are some option like [SpringBoot](https://spring.io/projects/spring-boot), [Quarkus](https://quarkus.io) and [Micronaut](https://micronaut.io).
 
+The basic idea is to front the microservice with the API Gateway and package the microservice into a AWS Lambda.
+In this way you only pay for the invocations of the service and you have no EC2 or Auto scaling groups or container OS to worry about.
+
 ## Transforming Lambda events (payload) to HttpRequests in your lambda handler
 If you write your lambda using the REST support in SpringBoot or Micronaut
 then you are expecting a HttpRequest object at your REST controller.
@@ -27,7 +30,7 @@ Luckily both SpringBoot and Micronaut have solutions for converting the Lambda e
 In Spring you need to implement your own proxy of `com.amazonaws.services.lambda.runtime.RequestStreamHandler`
 that in turn creates the lambda handler for transforming the event.
 
-```
+```Java
 public class StreamLambdaHandler implements RequestStreamHandler {
   private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> sHandler;
   // This means AWS Lambda executes the code as it starts the JVM, giving you better performance out of the gate.
@@ -229,14 +232,14 @@ To create a book:
 curl --header "Content-Type: application/json" \
   --request POST \
   --data '{"description":"The Silmarillion"}' \
-  https://0w7b2c3yql.execute-api.eu-north-1.amazonaws.com/api/v1/books
+  https://8wzj454ygf.execute-api.eu-north-1.amazonaws.com/api/v1/books
 
 ```
 
 To list all books:
 
 ```
-curl https://0w7b2c3yql.execute-api.eu-north-1.amazonaws.com/api/v1/books
+curl https://8wzj454ygf.execute-api.eu-north-1.amazonaws.com/api/v1/books
 ```
 
 First time you invoke the lambda AWS will start your microservice. So depending on startup time of the microservice the

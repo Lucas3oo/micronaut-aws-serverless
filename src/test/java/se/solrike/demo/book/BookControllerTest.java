@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.amazonaws.serverless.proxy.internal.testutils.MockLambdaContext;
 import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
+import com.amazonaws.serverless.proxy.model.AwsProxyRequestContext;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.model.MultiValuedTreeMap;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -115,6 +116,12 @@ public class BookControllerTest {
     assertThat(mRepository.findById(bookId).get().getDescription()).isEqualTo(bookDescription);
   }
 
+  @Test
+  void callNotExistentUrl() throws Exception {
+    AwsProxyResponse response = handleRequest("GET", "/api/v1/boks");
+    assertThat(response.getStatusCode()).isEqualTo(404);
+  }
+
   AwsProxyResponse handleRequest(String method, String path) throws Exception {
     return handleRequest(method, path, null, null);
   }
@@ -133,6 +140,9 @@ public class BookControllerTest {
     if (body != null) {
       request.setBody(mObjectMapper.writeValueAsString(body));
     }
+    AwsProxyRequestContext awsProxyRequestContext = new AwsProxyRequestContext();
+    awsProxyRequestContext.setRequestId("some-random-req-ID");
+    request.setRequestContext(awsProxyRequestContext);
     return sHandler.handleRequest(request, sLambdaContext);
   }
 

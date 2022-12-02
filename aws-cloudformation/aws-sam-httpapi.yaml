@@ -83,6 +83,8 @@ Resources:
         Environment: !Ref Environment
         Owner: !Ref Owner
       Timeout: 20 # seconds
+      # enable X-Ray logging
+      Tracing: Active
 
 
 

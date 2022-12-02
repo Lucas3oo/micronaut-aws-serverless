@@ -10,8 +10,8 @@ repositories {
 dependencies {
   // versions for the plugins are controlled here
   // <plugin id>:<plugin id>.gradle.plugin:<version>.
-  implementation 'com.avast.gradle.docker-compose:com.avast.gradle.docker-compose.gradle.plugin:0.14.11'
-  implementation 'se.solrike.cloudformation:se.solrike.cloudformation.gradle.plugin:1.0.0-beta.2'
+  implementation 'com.avast.gradle.docker-compose:com.avast.gradle.docker-compose.gradle.plugin:0.16.11'
+  implementation 'se.solrike.cloudformation:se.solrike.cloudformation.gradle.plugin:1.0.0'
   implementation 'se.solrike.sonarlint:se.solrike.sonarlint.gradle.plugin:1.0.0-beta.6'
- implementation 'seek.aws:seek.aws.gradle.plugin:0.0.35'
+  implementation 'seek.aws:seek.aws.gradle.plugin:0.0.35'
 }
