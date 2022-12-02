@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.transaction.annotation.ReadOnly;
 import io.micronaut.validation.Validated;
 
 @Validated
@@ -30,14 +32,14 @@ public class BookController {
   private BookMapper mMapper;
 
   @Post()
+  @Transactional
   public Integer add(@Body @Valid BookDto book) {
-
     sLogger.debug("in add method");
-
     BookEntity entity = mMapper.convertToEntity(book);
     // set id to null to ensure that it will be a new book we are adding.
     entity.setId(null);
-    return mRepository.save(entity).getId();
+    Integer id = mRepository.save(entity).getId();
+    return id;
   }
 
   // Using the syntax {?bookFilters*} we can assign request parameters
@@ -49,6 +51,7 @@ public class BookController {
   // @Valid for the method argument and @Validated at the class level.
   // see https://docs.micronaut.io/latest/guide/#routing
   @Get("{?bookFilters*}")
+  @ReadOnly
   public Optional<List<BookDto>> getByQueryParams(@Valid @Nullable BookFilters bookFilters) {
     // even if bookFilters is indeed optional the instance is created but with its properties set to null.
     if (bookFilters.getDescription() != null) {
@@ -63,6 +66,7 @@ public class BookController {
   }
 
   @Get("/{id}")
+  @ReadOnly
   public Optional<BookDto> getById(@PathVariable Integer id) {
     return mRepository.retrieveById(id);
   }

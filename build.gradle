@@ -33,6 +33,7 @@ dependencyManagement {
     dependency 'net.logstash.logback:logstash-logback-encoder:6.5'
     dependency "org.mapstruct:mapstruct:$mapStructVersion"
     dependency "org.mapstruct:mapstruct-processor:$mapStructVersion"
+    dependency 'org.springframework:spring-orm:5.2.0.RELEASE' // for Spring's TX mgr
 
 
 
@@ -48,11 +49,14 @@ dependencyManagement {
 dependencies {
   annotationProcessor 'io.micronaut.data:micronaut-data-processor'
   annotationProcessor 'io.micronaut:micronaut-http-validation'
+  //annotationProcessor 'io.micronaut.spring:micronaut-spring-annotation' // for Spring's TX mgr
   annotationProcessor 'org.mapstruct:mapstruct-processor'
   implementation 'com.amazonaws:aws-xray-recorder-sdk-sql'
   implementation 'io.micrometer:micrometer-core'
   implementation 'io.micronaut.aws:micronaut-aws-sdk-v2'
   implementation 'io.micronaut.data:micronaut-data-hibernate-jpa'
+  //implementation 'io.micronaut.data:micronaut-data-spring' // for Spring's TX mgr
+  //implementation 'io.micronaut.spring:micronaut-spring' // for Spring's TX mgr
   implementation 'io.micronaut.sql:micronaut-jdbc-hikari'
   implementation 'io.micronaut:micronaut-http-client'
   implementation 'io.micronaut:micronaut-jackson-databind'
@@ -61,6 +65,7 @@ dependencies {
   implementation 'jakarta.annotation:jakarta.annotation-api'
   implementation 'javax.inject:javax.inject'
   implementation 'org.mapstruct:mapstruct'
+  //implementation 'org.springframework:spring-orm' // for Spring's TX mgr
   runtimeOnly 'ch.qos.logback:logback-classic'
   runtimeOnly 'com.h2database:h2'
   runtimeOnly 'com.mysql:mysql-connector-j'
@@ -108,4 +113,8 @@ wrapper {
   gradleVersion = '7.5'
 }
 
+// start a local DB in docker
+// docker run --name slrk-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
+// docker stop slrk-mysql
+// docker start slrk-mysql
 
