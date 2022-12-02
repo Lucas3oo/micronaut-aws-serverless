@@ -1,5 +1,5 @@
 # Get better insights with AWS X-Ray
-Tags: aws tracing logging lambda x-ray slf4j mdc microservices spring micronaut
+Tags: aws tracing logging lambda x-ray slf4j mdc microservices spring micronaut cloudwatch
 
 
 AWS X-Ray is a distributed tracing framework that provides a view over how your request travels through the application and infrastructure.
@@ -17,7 +17,7 @@ The DB is AWS RDS MySQL but it can be any DB. The lambda is deployed behind the 
 The lambda function needs to be deployed with "advanced tracing" enabled.
 AWS will then add HTTP headers with a unique X-Ray ID, like a request ID and downstream the X-Ray SDK make sure it is passed along in any calls to other AWS services your application is using.
 
-If the lambda is written in Java and your are using some of the lambda to HTTP proxies for SpringBoot or Micronaut then you can log the X-Ray ID in the application log also since AWS adds it to the MDC (Message Diagnostic Context) for SLF4J:
+If the lambda is written in Java and your are using some of the lambda to HTTP proxies for SpringBoot or Micronaut then you can log the X-Ray ID in the application log also since AWS adds it to the [MDC (Mapped Diagnostic Context)](https://logback.qos.ch/manual/mdc.html "MDC")  for SLF4J/Logback:
 
 ```XML
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -69,4 +69,8 @@ You will get an overview over the activities using the "Service map" tab. Rememb
 You can then drill down per request or view the average.
 
 ![altText](screenshots/segments.png "Segments timeline")
+
+## Conclusion
+AWS X-Ray is a good option to better get an overview of where your application spends its time. It is really easy to start using it.
+The cost is about $5.00 per 1 million traces recorded.
 
